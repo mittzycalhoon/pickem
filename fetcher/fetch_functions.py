@@ -10,7 +10,7 @@ def fetch_week(week):
     root = results[0]
     for child in root:
         print ('%s %s vs. %s %s' % (child.attrib['hnn'], child.attrib['hs'], child.attrib['vnn'], child.attrib['vs']))
-    return True
+    return ''
     
 def _constructUrlForNFL(year, week, preseason=False):
     type = 'REG'
