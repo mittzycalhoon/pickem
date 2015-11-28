@@ -1,4 +1,4 @@
 
 def fetch():
-    return False
+    return True
     
