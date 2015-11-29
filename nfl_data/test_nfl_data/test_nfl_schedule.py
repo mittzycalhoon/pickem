@@ -10,8 +10,20 @@ class TestNflSchedule(unittest.TestCase):
         pass
     
     def test_FetchInvalidWeek(self):
-        self.assertRaises(Exception, fetch_week, 0)
+        self.assertRaises(FetchException, fetch_week, 2015, 0)
+        
+    def test_FetchInvalidYearLow(self):
+        self.assertRaises(FetchException, fetch_week, 1979, 1)
+        
+    def test_FetchInvalidYearHigh(self):
+        self.assertRaises(FetchException, fetch_week, 2016, 1)
+        
+    def test_FetchYearLow(self):
+        self.assertEqual(fetch_week(1980, 1), '')
+        
+    def test_FetchYearHigh(self):
+        self.assertEqual(fetch_week(2015, 1), '')
             
     def test_FetchValidWeek(self):
-        self.assertEqual(fetch_week(1), '')
+        self.assertEqual(fetch_week(2015, 1), '')
         
