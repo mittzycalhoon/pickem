@@ -1,7 +1,7 @@
 import unittest
-from fetcher.fetch_functions import fetch_week, FetchException
+from nfl_data.nfl_schedule import fetch_week, FetchException
 
-class TestFetcher(unittest.TestCase):
+class TestNflSchedule(unittest.TestCase):
     
     def setUp(self):
         pass
