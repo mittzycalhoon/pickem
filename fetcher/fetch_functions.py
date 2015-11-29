@@ -1,4 +1,0 @@
-
-def fetch():
-    return True
-    
