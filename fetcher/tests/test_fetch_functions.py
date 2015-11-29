@@ -9,9 +9,9 @@ class TestFetcher(unittest.TestCase):
     def tearDown(self):
         pass
     
-    def testFetchInvalidWeek(self):
+    def test_FetchInvalidWeek(self):
         self.assertRaises(Exception, fetch_week, 0)
             
-    def testFetchValidWeek(self):
+    def test_FetchValidWeek(self):
         self.assertEqual(fetch_week(1), '')
         
