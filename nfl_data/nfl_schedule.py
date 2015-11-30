@@ -3,19 +3,26 @@ from lxml import etree
 import urllib2
 from nfl_data.nfl_models import NflGame
 
-def fetch_week(year, week):
+def fetch_week(year, week, preseason=False):
+    """
+    Fetch all the games for the specified week
+    Note: Data is not available pre-1970
+    
+    :param year: The season to retrieve data for
+    :param week: The week of the season to retrieve data for
+    :param preseason: Include preseason? Defaults to False
+    :return: Number of games collected
+    """
     if week < 1 or week >17:
         raise FetchException('Invalid week')
         
-    if year < 1980 or year > date.today().year:
+    if year < 1970 or year > date.today().year:
         raise FetchException('Invalid year')
         
     data = urllib2.urlopen(_constructUrlForNFL(year, week))
     results = etree.XML(data.read())
     root = results[0]
     games = {}
-    home_wins = 0
-    visitor_wins = 0
     for child in root:
         game = NflGame()
         game.eid = child.attrib['eid']
@@ -35,19 +42,43 @@ def fetch_week(year, week):
         game.ga = child.attrib['ga']
         game.gt = child.attrib['gt']
         games[game.eid] = game
-        if game.hs > game.vs:
-            home_wins += 1
-        else:
-            visitor_wins += 1
-            
-    if home_wins > visitor_wins:
-        print 'HOME'
-    elif home_wins == visitor_wins:
-        print 'TIE'
-    else:
-        print 'VISITOR'
+ 
+    return len(games)
+    
+def fetch_season(year, preseason=False):
+    """
+    Fetch all of the games for a specified season.
+    
+    Quirky NFL week details:
+    < 1970 - Not available on the NFL site
+    1970 - 1977 There is 14 weeks to the season
+    1978 - 1989 There is 16 weeks to the season (intro of the 16 game season)
+    1990 - ? There are 17 weeeks to the season (intro of the bye week)
+    
+    :param year: The year to retrieve the games for (see rules above)
+    :param preseason: Include preseason? Defaults to False
+    :return: tuple of (total_weeks, total_games)
+    
+    """
+    total_weeks = 0
+    total_games = 0
+    for x in range(1, 14):
+        total_games += fetch_week(year, x, preseason)
+        total_weeks += 1
+
+    if year > 1977:
+        total_games += fetch_week(year, 15, preseason)
+        total_games += fetch_week(year, 16, preseason)
+        total_weeks += 2
+    
+    if year >= 1990: 
+        total_games += fetch_week(year, 17, preseason)
+        total_weeks +=1
+    
+    return total_weeks, total_games
         
-    return ''
+def fetch_all_from(start_year, preseason=False):
+    pass
     
 def _constructUrlForNFL(year, week, preseason=False):
     type = 'REG'
