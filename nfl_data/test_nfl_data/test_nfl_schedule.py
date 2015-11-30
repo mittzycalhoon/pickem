@@ -1,3 +1,4 @@
+from datetime import date
 import unittest
 from nfl_data.nfl_schedule import fetch_week, FetchException
 
@@ -16,7 +17,7 @@ class TestNflSchedule(unittest.TestCase):
         self.assertRaises(FetchException, fetch_week, 1969, 1)
         
     def test_FetchInvalidYearHigh(self):
-        self.assertRaises(FetchException, fetch_week, 2016, 1)
+        self.assertRaises(FetchException, fetch_week, date.today().year + 1, 1)
         
     def test_FetchYearLow(self):
         self.assertEqual(fetch_week(1970, 1), 13)
